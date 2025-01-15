@@ -1,14 +1,14 @@
 import {useState} from 'react'
-import {useWorkoutsContext} from '../hooks/useWorkoutsContext'
+import {useTasksContext} from '../hooks/useTasksContext'
 import { useAuthContext } from '../hooks/useAuthContext'
 
-const WorkoutForm = ()=>{
-    const {dispatch} = useWorkoutsContext()
+const TaskForm = ()=>{
+    const {dispatch} = useTasksContext()
     const {user} = useAuthContext()
 
     const[title, setTitle] = useState('')
-    const[load, setLoad] = useState('')
-    const[reps, setReps] = useState('')
+    const[priority, setPriority] = useState('')
+    const[description, setDescription] = useState('')
     const[error, setError] = useState('')
     const[deadline, setDeadline] = useState("");
     const[emptyFields, setEmptyFields] = useState([])
@@ -21,12 +21,12 @@ const WorkoutForm = ()=>{
             return
         }
 
-        // const workout={title, load, reps}
-        const workout = { title, reps, load, deadline };
+       
+        const task = { title, description, priority, deadline };
 
-        const response= await fetch('/api/workouts', {
+        const response= await fetch('/api/tasks', {
             method: 'POST',
-            body: JSON.stringify(workout),
+            body: JSON.stringify(task),
             headers:{
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.token}`
@@ -48,7 +48,7 @@ const WorkoutForm = ()=>{
             setReps('')
             setDeadline('');
 
-            dispatch({type: 'CREATE_WORKOUT', payload:json})
+            dispatch({type: 'CREATE_TASK', paypriority:json})
         }
     }
 
@@ -68,7 +68,7 @@ const WorkoutForm = ()=>{
     <label>Task Description:</label>
     <input
       type="text"
-      value={reps}
+      value={description}
       onChange={(e) => setReps(e.target.value)}
       required
       placeholder="Enter Task Description"
@@ -77,7 +77,7 @@ const WorkoutForm = ()=>{
     <label>Task Priority (1-10):</label>
     <input
       type="number"
-      value={load}
+      value={priority}
       onChange={(e) => setLoad(e.target.value)}
       min="1"
       max="10"
@@ -99,4 +99,4 @@ const WorkoutForm = ()=>{
     )
 }
 
-export default WorkoutForm;
+export default TaskForm;
