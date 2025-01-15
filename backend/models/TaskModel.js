@@ -7,11 +7,11 @@ const taskSchema = new Schema({
         type: String, 
         required:  true
     },
-    reps: {
+    description: {
         type: String, 
         required: true
     },
-    load: {
+    priority: {
         type: Number,
         required: true,
         min: 1, 
