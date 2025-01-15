@@ -71,13 +71,13 @@ header a {
   outline: none;
 }
 
-.workouts {
+.tasks {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.workout-details {
+.task-details {
   background: var(--white);
   border-radius: 8px;
   padding: 20px;
@@ -85,26 +85,26 @@ header a {
   box-shadow: 0 4px 6px var(--shadow);
 }
 
-.workout-details h4 {
+.task-details h4 {
   margin-bottom: 10px;
   font-size: 1.4em;
   color: var(--primary);
 }
 
-.workout-details p {
+.task-details p {
   margin: 4px 0;
   font-size: 1em;
   color: var(--text-muted);
 }
 
-.workout-details .actions {
+.task-details .actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 10px;
 }
 
-.workout-details .actions button {
+.task-details .actions button {
   background: var(--bg-light);
   border: 1px solid #ddd;
   color: var(--text-dark);
@@ -115,16 +115,16 @@ header a {
   transition: background-color 0.3s ease;
 }
 
-.workout-details .actions button:hover {
+.task-details .actions button:hover {
   background: #e6e6e6;
 }
 
-.workout-details .actions .delete {
+.task-details .actions .delete {
   color: var(--error);
   border-color: var(--error);
 }
 
-.workout-details .actions .delete:hover {
+.task-details .actions .delete:hover {
   background: #ffe6ea;
 }
 
@@ -244,7 +244,7 @@ form.signup, form.login {
   margin-bottom: 0;
 }
 
-.workouts {
+.tasks {
   grid-column: 2;
   grid-row: 2;
   display: flex;
@@ -300,7 +300,7 @@ form.signup, form.login {
 }
 
 
-.workout-details .actions button {
+.task-details .actions button {
   background: var(--bg-light);
   border: 1px solid #ddd;
   color: var(--text-dark);
@@ -312,7 +312,7 @@ form.signup, form.login {
   margin-top: 10px; /* Adds spacing between buttons */
 }
 
-.workout-details .actions button:last-child {
+.task-details .actions button:last-child {
   margin-top: 10px; /* Ensures no extra margin for the last button */
 }
 
