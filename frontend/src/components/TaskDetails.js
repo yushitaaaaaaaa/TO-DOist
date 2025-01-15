@@ -1,23 +1,23 @@
 import { useState } from "react";
-import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
+import { useTasksContext } from "../hooks/useTasksContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
-const WorkoutDetails = ({ workout }) => {
-  const { dispatch } = useWorkoutsContext();
+const TaskDetails = ({ task }) => {
+  const { dispatch } = useTasksContext();
   const { user } = useAuthContext();
   const [isEditing, setIsEditing] = useState(false);
-  const [updatedTitle, setUpdatedTitle] = useState(workout.title);
-  const [updatedLoad, setUpdatedLoad] = useState(workout.load);
-  const [updatedReps, setUpdatedReps] = useState(workout.reps);
-  const [updatedDeadline, setUpdatedDeadline] = useState(workout.deadline); // New state for deadline
+  const [updatedTitle, setUpdatedTitle] = useState(task.title);
+  const [updatedPriority, setUpdatedPriority] = useState(task.priority);
+  const [updatedDescription, setUpdatedDescription] = useState(task.description);
+  const [updatedDeadline, setUpdatedDeadline] = useState(task.deadline); 
 
   const handleDelete = async () => {
     if (!user) {
       return;
     }
 
-    const response = await fetch("/api/workouts/" + workout._id, {
+    const response = await fetch("/api/tasks/" + task._id, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -26,7 +26,7 @@ const WorkoutDetails = ({ workout }) => {
     const json = await response.json();
 
     if (response.ok) {
-      dispatch({ type: "DELETE_WORKOUT", payload: json });
+      dispatch({ type: "DELETE_TASK", paypriority: json });
     }
   };
 
@@ -36,16 +36,16 @@ const WorkoutDetails = ({ workout }) => {
       return;
     }
 
-    const updatedWorkout = {
+    const updatedTask = {
       title: updatedTitle,
-      load: updatedLoad,
-      reps: updatedReps,
+      priority: updatedPriority,
+      description: updatedDescription,
       deadline: updatedDeadline, 
     };
 
-    const response = await fetch("/api/workouts/" + workout._id, {
+    const response = await fetch("/api/tasks/" + task._id, {
       method: "PATCH",
-      body: JSON.stringify(updatedWorkout),
+      body: JSON.stringify(updatedTask),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user.token}`,
@@ -55,13 +55,13 @@ const WorkoutDetails = ({ workout }) => {
     const json = await response.json();
 
     if (response.ok) {
-      dispatch({ type: "UPDATE_WORKOUT", payload: json });
+      dispatch({ type: "UPDATE_TASK", paypriority: json });
       setIsEditing(false);
     }
   };
 
   return (
-    <div className="workout-details">
+    <div className="task-details">
       {isEditing ? (
         <form onSubmit={handleEdit}>
           <input
@@ -74,14 +74,14 @@ const WorkoutDetails = ({ workout }) => {
             type="number"
             min="1"
             max="10"
-            value={updatedLoad}
-            onChange={(e) => setUpdatedLoad(e.target.value)}
+            value={updatedPriority}
+            onChange={(e) => setUpdatedPriority(e.target.value)}
             placeholder="Task Priority"
           />
           <input
             type="text"
-            value={updatedReps}
-            onChange={(e) => setUpdatedReps(e.target.value)}
+            value={updatedDescription}
+            onChange={(e) => setUpdatedDescription(e.target.value)}
             placeholder="Task Description"
           />
           <input
@@ -95,19 +95,19 @@ const WorkoutDetails = ({ workout }) => {
         </form>
       ) : (
         <>
-          <h4>{workout.title}</h4>
+          <h4>{task.title}</h4>
           <p>
-            <strong>Task Priority:</strong> {workout.load}
+            <strong>Task Priority:</strong> {task.priority}
           </p>
           <p>
-            <strong>Task Description:</strong> {workout.reps}
+            <strong>Task Description:</strong> {task.description}
           </p>
           <p>
             <strong>Deadline:</strong>{" "}
-            {workout.deadline ? new Date(workout.deadline).toLocaleDateString(): "No deadline set"}
+            {task.deadline ? new Date(task.deadline).toLocaleDateString(): "No deadline set"}
           </p>
           <p>
-            {formatDistanceToNow(new Date(workout.createdAt), {
+            {formatDistanceToNow(new Date(task.createdAt), {
               addSuffix: true,
             })}
           </p>
@@ -129,4 +129,4 @@ const WorkoutDetails = ({ workout }) => {
   );
 };
 
-export default WorkoutDetails;
+export default TaskDetails;
