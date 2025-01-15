@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
-import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
+import { useTasksContext } from "../hooks/useTasksContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 //components
-import WorkoutDetails from "../components/WorkoutDetails";
-import WorkoutForm from "../components/WorkoutForm";
+import TaskDetails from "../components/TaskDetails";
+import TaskForm from "../components/TaskForm";
 
 const Home = () => {
-  const { workouts, dispatch } = useWorkoutsContext();
+  const { tasks, dispatch } = useTasksContext();
   const { user } = useAuthContext();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
-  const [sortedWorkouts, setSortedWorkouts] = useState([]);
+  const [sortedTasks, setSortedTasks] = useState([]);
 
   useEffect(() => {
-    const fetchWorkouts = async () => {
-      const response = await fetch(`/api/workouts?search=${search}&sort=${sort}`, 
+    const fetchTasks = async () => {
+      const response = await fetch(`/api/tasks?search=${search}&sort=${sort}`, 
       {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -24,18 +24,18 @@ const Home = () => {
       const json = await response.json();
 
       if (response.ok) {
-        dispatch({ type: "SET_WORKOUTS", payload: json });
+        dispatch({ type: "SET_TASKS", payload: json });
       }
     };
 
     if (user) {
-      fetchWorkouts();
+      fetchTasks();
     }
   }, [dispatch, user, search]); 
 
   useEffect(() => {
-    if (workouts) {
-      let sorted = [...workouts];
+    if (tasks) {
+      let sorted = [...tasks];
       if (sort === "newest") {
         sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       } else if (sort === "oldest") {
@@ -49,9 +49,9 @@ const Home = () => {
       } else if (sort === "latest_deadline") { // New sort option
         sorted.sort((a, b) => new Date(b.deadline) - new Date(a.deadline));
       }
-      setSortedWorkouts(sorted);
+      setSortedTasks(sorted);
     }
-  }, [sort, workouts]);
+  }, [sort, tasks]);
   
   return (
     <div className="home">
@@ -74,12 +74,12 @@ const Home = () => {
       </div>
       </div>
       
-      <div className="workouts">
-        {sortedWorkouts.map((workout) => (
-          <WorkoutDetails key={workout._id} workout={workout} />
+      <div className="tasks">
+        {sortedTasks.map((task) => (
+          <TaskDetails key={task._id} task={task} />
         ))}
       </div>
-      <WorkoutForm />
+      <TaskForm />
     </div>
   );
 };
@@ -88,53 +88,3 @@ export default Home;
 
 
 
-
-
-
-
-
-// import {useEffect} from 'react'
-// import {useWorkoutsContext} from '../hooks/useWorkoutsContext'
-// import {useAuthContext} from '../hooks/useAuthContext' 
-
-// //components
-// import WorkoutDetails from '../components/WorkoutDetails'
-// import WorkoutForm from '../components/WorkoutForm'
-
-// const Home = ()=>{
-//     const {workouts, dispatch} = useWorkoutsContext()
-//     const {user}=useAuthContext()
-
-//     useEffect(() =>{
-//         const fetchWorkouts = async()=>{
-//             const response = await fetch('/api/workouts', {
-//                 headers: {
-//                     'Authorization': `Bearer ${user.token}`
-//                 }
-//             })
-//             const json = await response.json()
-
-//             if (response.ok){
-//                 dispatch({type: 'SET_WORKOUTS', payload: json})
-//                 //setWorkouts(json)
-//             }
-//         }
-//         if (user){
-//             fetchWorkouts()
-//         }
-        
-
-//     }, [dispatch, user])  //dependency array
-
-//     return(
-//         <div className="home">
-//         <div className="workouts">
-//             {workouts && workouts.map((workout)=>(
-//                 <WorkoutDetails key={workout._id} workout={workout}/>
-//             ))}
-//         </div>
-//         <WorkoutForm />
-//         </div>
-//     )
-// }
-// export default Home;
