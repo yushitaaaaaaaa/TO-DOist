@@ -11,8 +11,8 @@ const getTasks = async (req, res) => {
     }
 
     const sortOptions = { createdAt: -1 }; // Default sort
-    if (sort === 'load-desc') {
-        sortOptions.load = -1; 
+    if (sort === 'priority-desc') {
+        sortOptions.priority = -1; 
     } else if (sort === 'deadline-asc') {
         sortOptions.deadline = 1; 
     } else if (sort === 'deadline-desc') {
@@ -47,18 +47,18 @@ const getTask=async(req,res)=>{
 //create new task
 const createTask = async (req, res) =>{
     console.log("Request body:", req.body);
-    const{title, load, reps, deadline}=req.body
+    const{title, priority, description, deadline}=req.body
 
     let emptyFields=[]
 
     if(!title){
         emptyFields.push('title')
     }
-    if (!load || load<1 || load>10){
-        emptyFields.push('load')
+    if (!priority || priority<1 || priority>10){
+        emptyFields.push('priority')
     }
-    if(!reps){
-        emptyFields.push('reps')
+    if(!description){
+        emptyFields.push('description')
     }
     if(!deadline){
         emptyFields.push('deadline')
@@ -70,7 +70,7 @@ const createTask = async (req, res) =>{
     //add doc to db
     try{
         const user_id=req.user._id
-        const task= await Task.create({title, load, reps, deadline, user_id})
+        const task= await Task.create({title, priority, description, deadline, user_id})
         res.status(200).json(task)
     } catch(error){
         console.error("Error saving task:", error);
@@ -103,8 +103,8 @@ const updateTask = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: 'No such task' });
     }
-    const { load } = req.body;
-    if (load && (load < 1 || load > 10)) {
+    const { priority } = req.body;
+    if (priority && (priority < 1 || priority > 10)) {
         return res.status(400).json({ error: 'Priority must be between 1 and 10.' });
     }
 
